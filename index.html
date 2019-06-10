@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <title>Title</title>
+    <title>Convert JSON Data to HTML Table</title>
+    <style>
+        * {
+            margin: auto;
+            padding: auto;
+            box-sizing: border-box;
+        }
+        
+        .main {
+            justify-content: center;
+            margin: auto;
+            padding: auto;
+        }
+        
+        th,
+        td,
+        p,
+        input {
+            font: 14px Verdana;
+        }
+        
+        table,
+        th,
+        td {
+            border: solid 1px #DDD;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+        }
+        
+        th {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div>
+            <h3>Search product By Id</h3>
+            <form action="">
+                <input type="text" id="txtproduct" name="txtproduct">
+                <button type="button" onclick="searchProduct()">Search Product</button>
+            </form>
+
+        </div>
+        <div>
+            <h3>Search product By Type</h3>
+            <form action="">
+                <input type="text" id="txttype" name="txttype">
+                <button type="button" onclick="searchType()">Search Type</button>
+            </form>
+        </div>
+        <div>
+            <h3>Search product By Price</h3>
+            <form action="">
+                <input type="text" id="txtprice" name="txtprice">
+                <button type="button" onclick="searchPrice()">Search Price</button>
+            </form>
+        </div>
+        <div>
+            <br>
+            <span>Product ID: </span>
+            <span id="proID" style="color: red"></span><br>
+            <span>Product Type: </span>
+            <span id="Type" style="color: red"></span><br>
+            <span>Product Price: </span>
+            <span id="Price" style="color: red"></span>
+        </div>
+    </div>
+    <br>
+    <h3>Result</h3>
+    <div id="resultdata">
+        <h3 id="err" style="color: red"></h3>
+    </div>
+    <h3>Product Information</h3>
+    <div id="datatable">
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+
+    <script>
+        var myBooks = [{
+            "ProductID": "0",
+            "ProductType": "Book1",
+            "Price": "15000",
+
+        }, {
+            "ProductID": "1",
+            "ProductType": "Book2",
+            "Price": "33500",
+
+        }, {
+            "ProductID": "2",
+            "ProductType": "Book3",
+            "Price": "13300",
+
+        }, {
+            "ProductID": "3",
+            "ProductType": "Book2",
+            "Price": "13000",
+
+        }, {
+            "ProductID": "4",
+            "ProductType": "Book3",
+            "Price": "10000",
+
+        }]
+
+        var col = [];
+        for (var i = 0; i < myBooks.length; i++) {
+            for (var key in myBooks[i]) {
+                if (col.indexOf(key) === -1) {
+                    col.push(key);
+                }
+            }
+        }
+        var table = document.createElement("table");
+        table.className = "table table-bordered table-hover";
+        var tr = table.insertRow(-1); // TABLE ROW.
+        for (var i = 0; i < col.length; i++) {
+            var th = document.createElement("th"); // TABLE HEADER.
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+        }
+        var th = document.createElement("th");
+        th.innerHTML = "Examine";
+        tr.appendChild(th);
+
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (let i = 0; i < myBooks.length; i++) {
+
+            tr = table.insertRow(-1);
+
+            for (let j = 0; j < col.length; j++) {
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = myBooks[i][col[j]];
+            }
+            var td = document.createElement("td"); // TABLE HEADER.
+            let button = document.createElement("button")
+            button.innerHTML = "Examine";
+            button.addEventListener("click", () => {
+                console.log(i);
+                document.getElementById('proID').innerHTML = myBooks[i].ProductID;
+                document.getElementById('Type').innerHTML = myBooks[i].ProductType;
+                document.getElementById('Price').innerHTML = myBooks[i].Price;
+            })
+            tr.appendChild(button)
+            button.className = "btn btn-primary";
+
+        }
+        var divContainer = document.getElementById("datatable");
+        divContainer.appendChild(table);
+
+        function searchProduct() {
+            var err = 0;
+            var id_product = document.getElementById('txtproduct').value;
+            for (var i = 0; i < myBooks.length; i++) {
+
+                if (myBooks[i].ProductID == id_product) {
+                    err = 1;
+                    var col = [];
+                    for (var i = 0; i < myBooks.length; i++) {
+                        for (var key in myBooks[i]) {
+                            if (col.indexOf(key) === -1) {
+                                col.push(key);
+                            }
+                        }
+                    }
+                    var table = document.createElement("table");
+                    table.className = "table table-bordered table-hover";
+                    var tr = table.insertRow(-1); // TABLE ROW.
+
+                    for (var i = 0; i < col.length; i++) {
+                        var th = document.createElement("th"); // TABLE HEADER.
+                        th.innerHTML = col[i];
+                        tr.appendChild(th);
+                    }
+
+                    for (var i = 0; i < myBooks.length; i++) {
+                        if (myBooks[i].ProductID == id_product) {
+                            tr = table.insertRow(-1);
+                            for (var j = 0; j < col.length; j++) {
+                                var tabCell = tr.insertCell(-1);
+                                tabCell.innerHTML = myBooks[id_product][col[j]];
+                            }
+                        }
+
+                    }
+                    var divContainer = document.getElementById("resultdata");
+                    divContainer.innerHTML = "";
+                    divContainer.appendChild(table);
+                }
+            }
+            if (err != 1) {
+                document.getElementById("err").innerHTML = "khong tim thay gia tri nao";
+            }
+        }
+
+        function searchType() {
+            var type = document.getElementById('txttype').value;
+            var err = 0;
+            for (var i = 0; i < myBooks.length; i++) {
+                if (myBooks[i].ProductType == type) {
+                    err = 1;
+                    var col = [];
+                    for (var i = 0; i < myBooks.length; i++) {
+                        for (var key in myBooks[i]) {
+                            if (col.indexOf(key) === -1) {
+                                col.push(key);
+                            }
+                        }
+                    }
+                    var table = document.createElement("table");
+                    table.className = "table table-bordered table-hover";
+                    var tr = table.insertRow(-1); // TABLE ROW.
+
+                    for (var i = 0; i < col.length; i++) {
+                        var th = document.createElement("th"); // TABLE HEADER.
+                        th.innerHTML = col[i];
+                        tr.appendChild(th);
+                    }
+                    var err = 0;
+                    for (var i = 0; i < myBooks.length; i++) {
+                        if (myBooks[i].ProductType == type) {
+                            tr = table.insertRow(-1);
+                            for (var j = 0; j < col.length; j++) {
+                                var tabCell = tr.insertCell(-1);
+                                tabCell.innerHTML = myBooks[i][col[j]];
+                            }
+                            err = 1;
+                        }
+                    }
+                    if (err != 1) {
+                        alert("hgth");
+                    }
+                    document.getElementById("err").innerHTML = "";
+                    var divContainer = document.getElementById("resultdata");
+                    divContainer.appendChild(table);
+                }
+            }
+            if (err != 1) {
+                document.getElementById("err").innerHTML = "khong tim thay gia tri nao";
+            }
+        }
+
+        function searchPrice() {
+            var price = document.getElementById('txtprice').value;
+            for (var i = 0; i < myBooks.length; i++) {
+
+                var col = [];
+                for (var i = 0; i < myBooks.length; i++) {
+                    for (var key in myBooks[i]) {
+                        if (col.indexOf(key) === -1) {
+                            col.push(key);
+                        }
+                    }
+                }
+                var table = document.createElement("table");
+                table.className = "table table-bordered table-hover";
+                var tr = table.insertRow(-1); // TABLE ROW.
+
+                for (var i = 0; i < col.length; i++) {
+                    var th = document.createElement("th"); // TABLE HEADER.
+                    th.innerHTML = col[i];
+                    tr.appendChild(th);
+                }
+
+                for (var i = 0; i < myBooks.length; i++) {
+                    if (myBooks[i].Price >= (parseInt(price) - 150) && myBooks[i].Price <= (parseInt(price) + 150)) {
+                        tr = table.insertRow(-1);
+                        for (var j = 0; j < col.length; j++) {
+                            var tabCell = tr.insertCell(-1);
+                            tabCell.innerHTML = myBooks[i][col[j]];
+                        }
+                    }
+                }
+
+                // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+                var divContainer = document.getElementById("resultdata");
+                divContainer.innerHTML = "";
+                divContainer.appendChild(table);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
